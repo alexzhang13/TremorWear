@@ -2,6 +2,7 @@
 
 # change root to one up
 import os
+os.chdir(os.getcwd())
 os.chdir("..")
 
 # python driver for mpu9250: https://github.com/MomsFriendlyRobotCompany/mpu9250
