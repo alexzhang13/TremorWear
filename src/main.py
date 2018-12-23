@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 
-# change root to one up
-import os
-os.chdir(os.getcwd())
-os.chdir("..")
+# make libs folder visible
+import sys
+sys.path.append('../')
 
 # python driver for mpu9250: https://github.com/MomsFriendlyRobotCompany/mpu9250
 from libs.mpu9250.mpu9250.mpu9250 import mpu9250
