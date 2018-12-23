@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+# change root to one up
+import os
+os.chdir("..")
+
 # python driver for mpu9250: https://github.com/MomsFriendlyRobotCompany/mpu9250
 from libs.mpu9250.mpu9250.mpu9250 import mpu9250
 from time import sleep
