@@ -5,7 +5,7 @@ import sys
 sys.path.append('../')
 
 # python driver for mpu9250: https://github.com/MomsFriendlyRobotCompany/mpu9250
-from libs.mpu9250.mpu9250.mpu9250 import mpu9250
+from libs.mpu9250.mpu9250 import mpu9250
 from time import sleep
 
 import numpy as np
