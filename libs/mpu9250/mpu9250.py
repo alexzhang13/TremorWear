@@ -73,7 +73,7 @@ class mpu9250(object):
 
         # set sample speed to 1khz
         self.write(MPU9250_ADDRESS, SMPLRT_DIV, 0)
-        self.write(MPU9250_ADDRESS, CONFIG, 0x03)
+        self.write(MPU9250_ADDRESS, CONFIG, 0x00)
 
         # set max range for gyro and accel
         self.write(MPU9250_ADDRESS, ACCEL_CONFIG, ACCEL_2G)
