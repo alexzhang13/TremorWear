@@ -42,7 +42,7 @@ def main():
         print("a {:.3f} {:.3f} {:.3f}".format(*a))
         print("g {:.3f} {:.3f} {:.3f}".format(*b))
 
-        sleep(0.01)
+        sleep(0.25)
 
     plots = [ax, ay, az, gx, gy, gz]
     #processor.FourierSequences(plots)
