@@ -17,7 +17,7 @@ from src import preprocess
 # CONSTANTS #
 DEG_TO_RAD = np.pi/180
 G_TO_MPERS = 9.80665
-SAMPLE_RATE = 1000
+SAMPLE_RATE = 200
 
 def main():
     imu = mpu9250()
@@ -25,7 +25,7 @@ def main():
 
     processor = preprocess.SignalProcessor(sample_rate=SAMPLE_RATE)
 
-    for i in range(5000):
+    for i in range(1000):
         a = imu.accel
         axt, ayt, azt = a
         ax.append(axt*G_TO_MPERS)
@@ -39,6 +39,7 @@ def main():
         gy.append(gyt*DEG_TO_RAD)
         gz.append(gzt*DEG_TO_RAD)
 
+        print("t {:.3f}".format(i))
         print("a {:.3f} {:.3f} {:.3f}".format(*a))
         print("g {:.3f} {:.3f} {:.3f}".format(*b))
 
