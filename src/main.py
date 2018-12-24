@@ -7,7 +7,7 @@ sys.path.append('../')
 # python driver for mpu9250: https://github.com/MomsFriendlyRobotCompany/mpu9250
 from libs.mpu9250.mpu9250 import mpu9250
 from libs import mcp3008
-from time import sleep
+import time
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -24,6 +24,8 @@ def main():
     ax, ay, az, gx, gy, gz = [], [], [], [], [], []
 
     processor = preprocess.SignalProcessor(sample_rate=SAMPLE_RATE)
+
+    start = time.time()
 
     for i in range(1000):
         a = imu.accel
@@ -42,6 +44,9 @@ def main():
         print("t {:.3f}".format(i))
         print("a {:.3f} {:.3f} {:.3f}".format(*a))
         print("g {:.3f} {:.3f} {:.3f}".format(*b))
+
+    end = time.time()
+    print("Elapsed: {:.3f}\tFreq(hz): {:.3f}", end-start, (end-start)/1000)
 
     plots = [ax, ay, az, gx, gy, gz]
     processor.FourierTest(gy, "Gyro Y")
