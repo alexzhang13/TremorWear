@@ -17,7 +17,7 @@ from src import preprocess
 # CONSTANTS #
 DEG_TO_RAD = np.pi/180
 G_TO_MPERS = 9.80665
-SAMPLE_RATE = 200
+SAMPLE_RATE = 1000
 
 def main():
     imu = mpu9250()
