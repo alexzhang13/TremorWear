@@ -17,23 +17,23 @@ from src import preprocess
 # CONSTANTS #
 DEG_TO_RAD = np.pi/180
 G_TO_MPERS = 9.80665
+SAMPLE_RATE = 1000
 
 def main():
     imu = mpu9250()
     ax, ay, az, gx, gy, gz = [], [], [], [], [], []
 
-    processor = preprocess.SignalProcessor(sample_rate=0.25)
+    processor = preprocess.SignalProcessor(sample_rate=SAMPLE_RATE)
 
-    for i in range(50):
+    for i in range(5000):
         a = imu.accel
-        #a = (1, 1, 1)
         axt, ayt, azt = a
         ax.append(axt*G_TO_MPERS)
         ay.append(ayt*G_TO_MPERS)
         az.append(azt*G_TO_MPERS)
 
         b = imu.gyro
-        #b = (1.1 * np.sin(3 * i), 6 * np.sin(32 * i), 1.3 * np.sin(1.2 * i))
+        #b = (0, 10 * np.cos(5 * np.pi * (1/SAMPLE_RATE) * i) + 5 * np.sin(10 * np.pi * (1/SAMPLE_RATE) * i), 0)
         gxt, gyt, gzt = b
         gx.append(gxt*DEG_TO_RAD)
         gy.append(gyt*DEG_TO_RAD)
@@ -42,17 +42,24 @@ def main():
         print("a {:.3f} {:.3f} {:.3f}".format(*a))
         print("g {:.3f} {:.3f} {:.3f}".format(*b))
 
-        sleep(0.25)
-
     plots = [ax, ay, az, gx, gy, gz]
-    #processor.FourierSequences(plots)
+    processor.FourierTest(gy, "Gyro Y")
     plot(plots)
 
 def plot(plots):
+    fig = plt.figure(figsize=(8, 4))
+    ax = fig.add_subplot(1, 1, 1)
+
+    ax.set_title(" Original Graph in Spatial Domain ", fontsize=18)
+    ax.set_ylabel("Gyro: [rad/s], Accel: [m/s]")
+    ax.set_xlabel("Time [ms]")
+
     for i in range(len(plots)):
         plt.plot(plots[i])
     plt.legend(['ax', 'ay', 'az', 'gx', 'gy', 'gz'], loc='upper left')
+
     plt.show()
+    fig.savefig("../imgs/original" + ".png")
 
 if __name__ == "__main__":
     main()

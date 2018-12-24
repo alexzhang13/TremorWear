@@ -38,7 +38,9 @@ GYRO_500DPS = (0x01 << 3)
 GYRO_1000DPS = (0x02 << 3)
 GYRO_2000DPS = (0x03 << 3)
 
-
+# --- Sample Rate -------------
+SMPLRT_DIV = 0x19
+CONFIG = 0x1A
 
 class mpu9250(object):
     def __init__(self, bus=1):
@@ -68,6 +70,12 @@ class mpu9250(object):
         self.write(MPU9250_ADDRESS, PWR_MGMT_1, 0x00)  # turn sleep mode off
         sleep(0.2)
         self.bus.write_byte_data(MPU9250_ADDRESS, PWR_MGMT_1, 0x01)  # auto select clock source
+
+        # set sample speed to 1khz
+        self.write(MPU9250_ADDRESS, SMPLRT_DIV, 0)
+        self.write(MPU9250_ADDRESS, CONFIG, 0x03)
+
+        # set max range for gyro and accel
         self.write(MPU9250_ADDRESS, ACCEL_CONFIG, ACCEL_2G)
         self.write(MPU9250_ADDRESS, GYRO_CONFIG, GYRO_250DPS)
 
