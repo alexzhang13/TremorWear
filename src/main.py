@@ -41,9 +41,9 @@ def main():
         gy.append(gyt*DEG_TO_RAD)
         gz.append(gzt*DEG_TO_RAD)
 
-        print("t {:.3f}".format(i))
-        print("a {:.3f} {:.3f} {:.3f}".format(*a))
-        print("g {:.3f} {:.3f} {:.3f}".format(*b))
+        #print("t {:.3f}".format(i))
+        #print("a {:.3f} {:.3f} {:.3f}".format(*a))
+        #print("g {:.3f} {:.3f} {:.3f}".format(*b))
 
     end = time.time()
     print("Elapsed: {:.3f}\tFreq(hz): {:.3f}".format(end-start, (end-start)/1000))
