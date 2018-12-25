@@ -88,10 +88,24 @@ class SignalProcessor():
 
         fig.savefig("../imgs/" + name + ".png")
 
+    def SaveButterFilterGraph(self, y, window, name):
+        fig = plt.figure(figsize=(8, 4))
+        ax = fig.add_subplot(1, 1, 1)
+
+        ax.set_title(" Composed Graph: " + name, fontsize=18)
+        ax.set_ylabel("Angular V(t) [rad/s]")
+        ax.set_xlabel("Time [s]")
+
+        # ax.plot(freq, 2.0/len(fourier) * np.abs(fourier[:len(fourier)//2]))
+        ax.plot(window, y)
+        plt.show()
+
+        fig.savefig("../imgs/" + name + ".png")
 
     def FourierTest(self, sequence, name):
         fourier, freq = self.Fourier(sequence)
         self.SaveFFTGraph(fourier, freq, name + "_FFT")
 
-        ifourier, window = self.Bandpass_Filter(sequence, 3, 12, 5)
-        self.SaveIFFTGraph(ifourier, window, name + "_C")
+        filtered, window = self.Bandpass_Filter(sequence, 3, 12, 5)
+        self.SaveButterFilterGraph(filtered, window, "Filtered")
+        #self.SaveIFFTGraph(ifourier, window, name + "_C")
