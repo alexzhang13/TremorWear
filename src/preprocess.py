@@ -102,10 +102,16 @@ class SignalProcessor():
 
         fig.savefig("../imgs/" + name + ".png")
 
+    def FilterTest(self, sequence, name):
+        filtered, window = self.Bandpass_Filter(sequence, 3, 12, 5)
+        self.SaveButterFilterGraph(filtered, window, "Filtered")
+
+        fourier, freq = self.Fourier(filtered)
+        self.SaveFFTGraph(fourier, freq, name + "_FFT")
+
     def FourierTest(self, sequence, name):
         fourier, freq = self.Fourier(sequence)
         self.SaveFFTGraph(fourier, freq, name + "_FFT")
 
-        filtered, window = self.Bandpass_Filter(sequence, 3, 12, 5)
-        self.SaveButterFilterGraph(filtered, window, "Filtered")
-        #self.SaveIFFTGraph(ifourier, window, name + "_C")
+        ifourier, window = self.IFourier(fourier, len(sequence))
+        self.SaveIFFTGraph(ifourier, window, name + "_C")
