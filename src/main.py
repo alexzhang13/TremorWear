@@ -53,7 +53,7 @@ def main():
         ax, ay, az, gx, gy, gz = read(args.readfile)
 
     plots = [ax, ay, az, gx, gy, gz]
-    processor.FourierTest(gx, "Gyro X")
+    processor.FilterTest(gx, "Gyro X")
     save(plots, "../data/saved_data_{}.txt".format(args.pnumber))
 
 def record(imu, length):
