@@ -46,7 +46,7 @@ def main():
         #print("g {:.3f} {:.3f} {:.3f}".format(*b))
 
     end = time.time()
-    print("Elapsed: {:.3f}\tFreq(hz): {:.3f}".format(end-start, (end-start)/1000))
+    print("Elapsed: {:.3f}\tFreq(hz): {:.3f}".format(end-start, SAMPLE_RATE/(end-start)))
 
     plots = [ax, ay, az, gx, gy, gz]
     processor.FourierTest(gy, "Gyro Y")
