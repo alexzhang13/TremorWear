@@ -28,7 +28,7 @@ def main():
     start = time.time()
 
     for i in range(1000):
-        a = #imu.accel
+        a = imu.accel
         axt, ayt, azt = a
         ax.append(axt*G_TO_MPERS)
         ay.append(ayt*G_TO_MPERS)
