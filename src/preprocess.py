@@ -1,17 +1,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.signal import butter, lfilter
+
 
 # Process 3 sequences of spatial information (gx, gy, gz)
 class SignalProcessor():
     def __init__(self, sample_rate):
         self.srate = sample_rate
 
-    # Simple Bandwidth-pass Filter
+    # Simple Truncating Filter
     def SimpleFilter(self, sequence, low_freq, high_freq):
         # Convert to FFT
         fourier, freq = self.Fourier(sequence)
 
-        # Simple Bandwidth-pass Filter
+        # Filter
         for i in range(len(freq)):
             if freq[i] < low_freq or freq[i] > high_freq:
                 fourier[i] = 0
@@ -21,8 +23,24 @@ class SignalProcessor():
         # Return iFFT of filtered FFT
         return self.IFourier(fourier, len(sequence))
 
-    def WFLC_Filter(self):
-        pass
+    # Simple Bandpass Filter
+    def Bandpass_Filter(self, sequence, low_freq, high_freq, order):
+        # Convert to FFT
+        #fourier, freq = self.Fourier(sequence)
+
+        # Filter
+        nyq = 0.5*self.srate # Nyquist Frequency
+        low = low_freq / nyq
+        high = high_freq / nyq
+        b, a = butter(order, [low, high], btype='bandpass')
+        filtered_sequence = lfilter(b, a, sequence)
+
+        #self.SaveFFTGraph(filtered_fourier, freq, "Filtered")
+
+        # Return iFFT of filtered FFT
+        #return self.IFourier(filtered_fourier, len(sequence))
+        time_window = np.linspace(0, len(sequence) * (1 / self.srate), len(sequence))
+        return filtered_sequence, time_window
 
     def Fourier(self, spatial_sequence):
         fourier = np.fft.fft(spatial_sequence)
@@ -75,5 +93,5 @@ class SignalProcessor():
         fourier, freq = self.Fourier(sequence)
         self.SaveFFTGraph(fourier, freq, name + "_FFT")
 
-        ifourier, window = self.SimpleFilter(sequence, 3, 12)
+        ifourier, window = self.Bandpass_Filter(sequence, 3, 12, 5)
         self.SaveIFFTGraph(ifourier, window, name + "_C")
