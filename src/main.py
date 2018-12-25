@@ -28,15 +28,11 @@ def main():
     start = time.time()
 
     for i in range(1000):
-        a = imu.accel
-        axt, ayt, azt = a
+        a = imu.accelgyro
+        (axt, ayt, azt), (gxt, gyt, gzt) = a
         ax.append(axt*G_TO_MPERS)
         ay.append(ayt*G_TO_MPERS)
         az.append(azt*G_TO_MPERS)
-
-        b = [1,1,1]#imu.gyro
-        #b = (0, 10 * np.cos(5 * np.pi * (1/SAMPLE_RATE) * i) + 5 * np.sin(10 * np.pi * (1/SAMPLE_RATE) * i), 0)
-        gxt, gyt, gzt = b
         gx.append(gxt*DEG_TO_RAD)
         gy.append(gyt*DEG_TO_RAD)
         gz.append(gzt*DEG_TO_RAD)
@@ -44,6 +40,7 @@ def main():
         #print("t {:.3f}".format(i))
         #print("a {:.3f} {:.3f} {:.3f}".format(*a))
         #print("g {:.3f} {:.3f} {:.3f}".format(*b))
+        #b = (0, 10 * np.cos(5 * np.pi * (1/SAMPLE_RATE) * i) + 5 * np.sin(10 * np.pi * (1/SAMPLE_RATE) * i), 0)
 
     end = time.time()
     print("Elapsed: {:.3f}\tFreq(hz): {:.3f}".format(end-start, SAMPLE_RATE/(end-start)))

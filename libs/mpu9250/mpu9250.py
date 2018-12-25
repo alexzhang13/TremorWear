@@ -145,6 +145,10 @@ class mpu9250(object):
         return self.read_xyz(MPU9250_ADDRESS, GYRO_DATA, self.glsb)
 
     @property
+    def accelgyro(self):
+        return self.read_xyz(MPU9250_ADDRESS, ACCEL_DATA, self.alsb), self.read_xyz(MPU9250_ADDRESS, GYRO_DATA, self.glsb)
+
+    @property
     def temp(self):
         """
 		Returns chip temperature in C
