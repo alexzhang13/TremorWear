@@ -72,9 +72,9 @@ class mpu9250(object):
         self.bus.write_byte_data(MPU9250_ADDRESS, PWR_MGMT_1, 0x01)  # auto select clock source
 
         # set sample speed to 200hz
-        self.write(MPU9250_ADDRESS, CONFIG, 0x02)
+        self.write(MPU9250_ADDRESS, CONFIG, 0x00)
         self.write(MPU9250_ADDRESS, SMPLRT_DIV, 0x00)
-        self.write(MPU9250_ADDRESS, ACCEL_CONFIG2, 0x01)
+        self.write(MPU9250_ADDRESS, ACCEL_CONFIG2, 0x03)
 
         # set max range for gyro and accel
         self.write(MPU9250_ADDRESS, ACCEL_CONFIG, ACCEL_2G)
