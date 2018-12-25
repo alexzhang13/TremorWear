@@ -28,6 +28,7 @@ parser.add_argument("--agent", type=str, default="LSTM", help="Agent to Run")
 parser.add_argument("--pnumber", type=int, default=0, help="Patient Number (For storing data)")
 parser.add_argument("--length", type=int, default=10000, help="Length of Tremor Recording")
 parser.add_argument("--record", type=bool, default=True, help="Recording or Reading as Data")
+parser.add_argument("--readfile", type=str, default="saved_data_0", help="Recording or Reading as Data")
 
 args = parser.parse_args()
 
@@ -37,14 +38,17 @@ def main():
 
     start = time.time()
 
-    # Record IMU Data
-    ax, ay, az, gx, gy, gz = record(imu, args.length)
+    if args.record is True:
+        # Record IMU Data
+        ax, ay, az, gx, gy, gz = record(imu, args.length)
+    else:
+        ax, ay, az, gx, gy, gz = read(args.readfile)
 
     end = time.time()
     print("Elapsed: {:.3f}\tAvg Freq(hz): {:.3f}".format(end-start, args.length/(end-start)))
 
     plots = [ax, ay, az, gx, gy, gz]
-    processor.FourierTest(gy, "Gyro Y")
+    processor.FourierTest(gx, "Gyro X")
     save(plots, "../data/saved_data_{}.txt".format(args.pnumber))
 
 def record(imu, length):
@@ -66,7 +70,7 @@ def record(imu, length):
 def read(filename):
     ax, ay, az, gx, gy, gz = [], [], [], [], [], []
 
-    with open(filename) as data:
+    with open("../data/" + filename + ".txt") as data:
         for line in data:
             # time[ms], ax, ay, az, gx, gy, gz
             _, axt, ayt, azt, gxt, gyt, gzt = scanf("%f %f %f %f %f %f %f", line)
