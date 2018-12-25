@@ -17,7 +17,7 @@ from src import preprocess
 # CONSTANTS #
 DEG_TO_RAD = np.pi/180
 G_TO_MPERS = 9.80665
-SAMPLE_RATE = 1000
+SAMPLE_RATE = 500
 
 def main():
     imu = mpu9250()
@@ -27,7 +27,7 @@ def main():
 
     start = time.time()
 
-    for i in range(1000):
+    for i in range(10000):
         a = imu.accelgyro
         (axt, ayt, azt), (gxt, gyt, gzt) = a
         ax.append(axt*G_TO_MPERS)
