@@ -18,6 +18,7 @@ from src import preprocess
 DEG_TO_RAD = np.pi/180
 G_TO_MPERS = 9.80665
 SAMPLE_RATE = 500
+EPISODES = 10000
 
 def main():
     imu = mpu9250()
@@ -27,7 +28,7 @@ def main():
 
     start = time.time()
 
-    for i in range(10000):
+    for i in range(EPISODES):
         a = imu.accelgyro
         (axt, ayt, azt), (gxt, gyt, gzt) = a
         ax.append(axt*G_TO_MPERS)
@@ -43,7 +44,7 @@ def main():
         #b = (0, 10 * np.cos(5 * np.pi * (1/SAMPLE_RATE) * i) + 5 * np.sin(10 * np.pi * (1/SAMPLE_RATE) * i), 0)
 
     end = time.time()
-    print("Elapsed: {:.3f}\tFreq(hz): {:.3f}".format(end-start, SAMPLE_RATE/(end-start)))
+    print("Elapsed: {:.3f}\tFreq(hz): {:.3f}".format(end-start, EPISODES/(end-start)))
 
     plots = [ax, ay, az, gx, gy, gz]
     processor.FourierTest(gy, "Gyro Y")
