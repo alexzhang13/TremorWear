@@ -27,7 +27,9 @@ parser = argparse.ArgumentParser(description='Main Class for TremorWear Training
 parser.add_argument("--agent", type=str, default="LSTM", help="Agent to Run")
 parser.add_argument("--pnumber", type=int, default=0, help="Patient Number (For storing data)")
 parser.add_argument("--length", type=int, default=10000, help="Length of Tremor Recording")
-parser.add_argument("--record", type=bool, default=True, help="Recording or Reading as Data")
+parser.add_argument("--record", dest="record_data", action="store_true", help="Record Patient Data")
+parser.add_argument("--read", dest="record_data", action="store_false", help="Playback Patient Data from File")
+parser.set_defaults(record_data=True)
 parser.add_argument("--readfile", type=str, default="saved_data_0", help="Recording or Reading as Data")
 
 args = parser.parse_args()
@@ -38,7 +40,7 @@ def main():
 
     start = time.time()
 
-    if args.record is True:
+    if args.record_data is True:
         # Record IMU Data
         ax, ay, az, gx, gy, gz = record(imu, args.length)
     else:
