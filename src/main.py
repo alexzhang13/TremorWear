@@ -30,24 +30,27 @@ parser.add_argument("--length", type=int, default=10000, help="Length of Tremor 
 parser.add_argument("--record", dest="record_data", action="store_true", help="Record Patient Data")
 parser.add_argument("--read", dest="record_data", action="store_false", help="Playback Patient Data from File")
 parser.set_defaults(record_data=True)
-parser.add_argument("--readfile", type=str, default="saved_data_0", help="Recording or Reading as Data")
+parser.add_argument("--readfile", type=str, default="saved_data_0", help="Name of Recording for Playback")
 
 args = parser.parse_args()
 
 def main():
-    imu = mpu9250()
     processor = preprocess.SignalProcessor(sample_rate=SAMPLE_RATE)
 
-    start = time.time()
-
     if args.record_data is True:
+        print("Flag: Recording Data to PNumber: {}".format(args.pnumber))
+        imu = mpu9250()
+        print("IMU Initialized")
+        start = time.time()
+
         # Record IMU Data
         ax, ay, az, gx, gy, gz = record(imu, args.length)
-    else:
-        ax, ay, az, gx, gy, gz = read(args.readfile)
 
-    end = time.time()
-    print("Elapsed: {:.3f}\tAvg Freq(hz): {:.3f}".format(end-start, args.length/(end-start)))
+        end = time.time()
+        print("Elapsed: {:.3f}\tAvg Freq(hz): {:.3f}".format(end - start, args.length / (end - start)))
+    else:
+        print("Flag: Reading Data from File: {}".format(args.readfile))
+        ax, ay, az, gx, gy, gz = read(args.readfile)
 
     plots = [ax, ay, az, gx, gy, gz]
     processor.FourierTest(gx, "Gyro X")
