@@ -6,8 +6,20 @@ class SignalProcessor():
     def __init__(self, sample_rate):
         self.srate = sample_rate
 
-    # Run Kalman Filter on IMU Data
-    def KFilter(self):
+    # Simple Bandwidth-pass Filter
+    def SimpleFilter(self, sequence, low_freq, high_freq):
+        # Convert to FFT
+        fourier, freq = self.Fourier(sequence)
+
+        # Simple Bandwidth-pass Filter
+        for i in range(len(freq)):
+            if freq[i] < low_freq or freq[i] > high_freq:
+                fourier[i] = 0
+
+        # Return iFFT of filtered FFT
+        return self.IFourier(fourier, len(sequence))
+
+    def WFLC_Filter(self):
         pass
 
     def Fourier(self, spatial_sequence):
@@ -20,6 +32,9 @@ class SignalProcessor():
         time_window = np.linspace(0, window_size*(1/self.srate), window_size)
 
         return ifourier, time_window
+
+
+# -------------------------------- TESTER FUNCTIONS -------------------------------- #
 
     def SaveIFFTGraph(self, ifourier, window, name):
         fig = plt.figure(figsize=(8, 4))
@@ -53,11 +68,10 @@ class SignalProcessor():
 
         fig.savefig("../imgs/" + name + ".png")
 
-    def FilterTremor(self, fourier, freq):
-        pass
 
     def FourierTest(self, sequence, name):
         fourier, freq = self.Fourier(sequence)
         self.SaveFFTGraph(fourier, freq, name + "_FFT")
-        ifourier, window = self.IFourier(fourier, len(sequence))
+
+        ifourier, window = self.SimpleFilter(sequence, 3, 12)
         self.SaveIFFTGraph(ifourier, window, name + "_C")
