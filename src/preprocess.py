@@ -106,6 +106,9 @@ class SignalProcessor():
         filtered, window = self.Bandpass_Filter(sequence, 3, 12, 5)
         self.SaveButterFilterGraph(filtered, window, "Filtered")
 
+        fourier, freq = self.Fourier(sequence)
+        self.SaveFFTGraph(fourier, freq, name + "_OriginalFFT")
+
         fourier, freq = self.Fourier(filtered)
         self.SaveFFTGraph(fourier, freq, name + "_FFT")
 
