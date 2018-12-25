@@ -28,13 +28,13 @@ def main():
     start = time.time()
 
     for i in range(1000):
-        a = [1, 1, 1] #imu.accel
+        a = #imu.accel
         axt, ayt, azt = a
         ax.append(axt*G_TO_MPERS)
         ay.append(ayt*G_TO_MPERS)
         az.append(azt*G_TO_MPERS)
 
-        b = imu.gyro
+        b = [1,1,1]#imu.gyro
         #b = (0, 10 * np.cos(5 * np.pi * (1/SAMPLE_RATE) * i) + 5 * np.sin(10 * np.pi * (1/SAMPLE_RATE) * i), 0)
         gxt, gyt, gzt = b
         gx.append(gxt*DEG_TO_RAD)
