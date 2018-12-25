@@ -16,6 +16,8 @@ class SignalProcessor():
             if freq[i] < low_freq or freq[i] > high_freq:
                 fourier[i] = 0
 
+        self.SaveFFTGraph(fourier, freq, "Filtered")
+
         # Return iFFT of filtered FFT
         return self.IFourier(fourier, len(sequence))
 
