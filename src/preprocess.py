@@ -103,7 +103,7 @@ class SignalProcessor():
         fig.savefig("../imgs/" + name + ".png")
 
     def FilterTest(self, sequence, name):
-        filtered, window = self.Bandpass_Filter(sequence, 3, 12, 5)
+        filtered, window = self.Bandpass_Filter(sequence, 6, 8, 6)
         self.SaveButterFilterGraph(filtered, window, "Filtered")
 
         fourier, freq = self.Fourier(sequence)

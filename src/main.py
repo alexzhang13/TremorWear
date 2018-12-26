@@ -54,6 +54,7 @@ def main():
 
     plots = [ax, ay, az, gx, gy, gz]
     processor.FilterTest(gx, "Gyro X")
+    plot([gx])
     save(plots, "../data/saved_data_{}.txt".format(args.pnumber))
 
 def record(imu, length):
