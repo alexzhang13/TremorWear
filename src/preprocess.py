@@ -32,7 +32,7 @@ class SignalProcessor():
         nyq = 0.5*self.srate # Nyquist Frequency
         low = low_freq / nyq
         high = high_freq / nyq
-        b, a = butter(order, [low, high], btype='bandpass')
+        b, a = butter(order, [low, high], btype='band')
         filtered_sequence = lfilter(b, a, sequence)
 
         #self.SaveFFTGraph(filtered_fourier, freq, "Filtered")
@@ -103,7 +103,7 @@ class SignalProcessor():
         fig.savefig("../imgs/" + name + ".png")
 
     def FilterTest(self, sequence, name):
-        filtered, window = self.Bandpass_Filter(sequence, 6, 8, 6)
+        filtered, window = self.Bandpass_Filter(sequence, 3, 12, 5)
         self.SaveButterFilterGraph(filtered, window, "Filtered")
 
         fourier, freq = self.Fourier(sequence)
