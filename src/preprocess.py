@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.signal import butter, lfilter
+from scipy.signal import butter, filtfilt
 
 
 # Process 3 sequences of spatial information (gx, gy, gz)
@@ -33,7 +33,7 @@ class SignalProcessor():
         low = low_freq / nyq
         high = high_freq / nyq
         b, a = butter(order, [low, high], btype='band')
-        filtered_sequence = lfilter(b, a, sequence)
+        filtered_sequence = filtfilt(b, a, sequence)
 
         #self.SaveFFTGraph(filtered_fourier, freq, "Filtered")
 

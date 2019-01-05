@@ -99,7 +99,7 @@ def plot(plots):
     ax.set_xlabel("Time [ms]")
 
     for i in range(len(plots)):
-        plt.plot(plots[i])
+        plt.plot(np.arange(0.0, args.length*1000/(1000*SAMPLE_RATE), 1/SAMPLE_RATE), plots[i])
     plt.legend(['ax', 'ay', 'az', 'gx', 'gy', 'gz'], loc='upper left')
 
     plt.show()
