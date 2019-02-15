@@ -53,12 +53,13 @@ def main():
         end = time.time()
         print("Elapsed: {:.3f}\tAvg Freq(hz): {:.3f}".format(end - start, args.length / (end - start)))
 
+        plots = [ax, ay, az, gx, gy, gz]
+        save(plots, "../data/{}".format(args.plabel), args.length / (end - start))
     else:
         print("Flag: Reading Data from File: {}".format(args.readfile))
-        ax, ay, az, gx, gy, gz = read(args.readfile)
-
-    plots = [ax, ay, az, gx, gy, gz]
-    save(plots, "../data/{}".format(args.plabel))
+        freq, ax, ay, az, gx, gy, gz = read(args.readfile)
+        plots = [ax, ay, az, gx, gy, gz]
+        plot(plots)
 
     if args.plot_data is True:
         processor.FilterTest(gx, "Gyro X")
@@ -80,10 +81,12 @@ def record(imu, length):
 
     return ax, ay, az, gx, gy, gz
 
+
 def read(filename):
     ax, ay, az, gx, gy, gz = [], [], [], [], [], []
 
     with open("../data/" + filename + ".txt") as data:
+        freq = scanf("%f", data.readline())
         for line in data:
             # time[ms], ax, ay, az, gx, gy, gz
             _, axt, ayt, azt, gxt, gyt, gzt = scanf("%f %f %f %f %f %f %f", line)
@@ -94,7 +97,7 @@ def read(filename):
             gy.append(gyt)
             gz.append(gzt)
 
-    return ax, ay, az, gx, gy, gz
+    return freq, ax, ay, az, gx, gy, gz
 
 
 def plot(plots):
@@ -112,10 +115,11 @@ def plot(plots):
     plt.show()
     fig.savefig("../imgs/original" + ".png")
 
-def save(data, name):
-    now = datetime.datetime.now()
 
+def save(data, name, freq):
+    now = datetime.datetime.now()
     file = open(name + "_{}.txt".format(now.isoformat()), 'w')
+    file.write("{}\n".format(freq))
     for i in range(len(data[0])):
         file.write("{} {} {} {} {} {} {}\n".format((1000*i/SAMPLE_RATE), data[0][i], data[1][i], data[2][i], data[3][i],
                                                  data[4][i], data[5][i]))
