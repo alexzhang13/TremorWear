@@ -7,8 +7,10 @@ sys.path.append('../')
 # python driver for mpu9250: https://github.com/MomsFriendlyRobotCompany/mpu9250
 from libs.mpu9250.mpu9250 import mpu9250
 from libs import mcp3008
+
 import time
 import argparse
+import datetime
 
 from scanf import scanf
 import numpy as np
@@ -25,12 +27,14 @@ SAMPLE_RATE = 500
 # Arg Parse
 parser = argparse.ArgumentParser(description='Main Class for TremorWear Training and Testing')
 parser.add_argument("--agent", type=str, default="LSTM", help="Agent to Run")
-parser.add_argument("--pnumber", type=int, default=0, help="Patient Number (For storing data)")
 parser.add_argument("--length", type=int, default=10000, help="Length of Tremor Recording")
+parser.add_argument("--plabel", type=int, default=0, help="Patient Label")
 parser.add_argument("--record", dest="record_data", action="store_true", help="Record Patient Data")
 parser.add_argument("--read", dest="record_data", action="store_false", help="Playback Patient Data from File")
 parser.set_defaults(record_data=True)
 parser.add_argument("--readfile", type=str, default="saved_data_0", help="Name of Recording for Playback")
+parser.add_argument("--plot", dest="plot_data", action="store_false", help="Plot Data")
+parser.set_defaults(plot_data=False)
 
 args = parser.parse_args()
 
@@ -48,20 +52,23 @@ def main():
 
         end = time.time()
         print("Elapsed: {:.3f}\tAvg Freq(hz): {:.3f}".format(end - start, args.length / (end - start)))
+
     else:
         print("Flag: Reading Data from File: {}".format(args.readfile))
         ax, ay, az, gx, gy, gz = read(args.readfile)
 
     plots = [ax, ay, az, gx, gy, gz]
-    processor.FilterTest(gx, "Gyro X")
-    plot([gx])
-    save(plots, "../data/saved_data_{}.txt".format(args.pnumber))
+    save(plots, "../data/{}".format(args.plabel))
+
+    if args.plot_data is True:
+        processor.FilterTest(gx, "Gyro X")
+        plot([gx])
+
 
 def record(imu, length):
     ax, ay, az, gx, gy, gz = [], [], [], [], [], []
 
     for i in range(length):
-        # example_gyro = (0, 10 * np.cos(5 * np.pi * (1/SAMPLE_RATE) * i) + 5 * np.sin(10 * np.pi * (1/SAMPLE_RATE) * i), 0)
         a = imu.accelgyro
         (axt, ayt, azt), (gxt, gyt, gzt) = a
         ax.append(axt*G_TO_MPERS)
@@ -106,7 +113,9 @@ def plot(plots):
     fig.savefig("../imgs/original" + ".png")
 
 def save(data, name):
-    file = open(name, 'a')
+    now = datetime.datetime.now()
+
+    file = open(name + "_{}.txt".format(now.isoformat()), 'w')
     for i in range(len(data[0])):
         file.write("{} {} {} {} {} {} {}\n".format((1000*i/SAMPLE_RATE), data[0][i], data[1][i], data[2][i], data[3][i],
                                                  data[4][i], data[5][i]))

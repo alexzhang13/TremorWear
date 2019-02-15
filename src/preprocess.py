@@ -53,6 +53,12 @@ class SignalProcessor():
 
         return ifourier, time_window
 
+    def Bandpass_All(self, sequences, low_freq, high_freq, order):
+        filtered_sequences = []
+        for i in range(len(sequences)):
+            filtered_sequences.append((self.Bandpass_Filter(sequences[i], low_freq, high_freq, order)))
+
+        return filtered_sequences
 
 # -------------------------------- TESTER FUNCTIONS -------------------------------- #
 
