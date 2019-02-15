@@ -28,7 +28,7 @@ SAMPLE_RATE = 500
 parser = argparse.ArgumentParser(description='Main Class for TremorWear Training and Testing')
 parser.add_argument("--agent", type=str, default="LSTM", help="Agent to Run")
 parser.add_argument("--length", type=int, default=10000, help="Length of Tremor Recording")
-parser.add_argument("--plabel", type=int, default=0, help="Patient Label")
+parser.add_argument("--plabel", type=str, default="Patient1", help="Patient Label")
 parser.add_argument("--record", dest="record_data", action="store_true", help="Record Patient Data")
 parser.add_argument("--read", dest="record_data", action="store_false", help="Playback Patient Data from File")
 parser.set_defaults(record_data=True)
@@ -42,7 +42,7 @@ def main():
     processor = preprocess.SignalProcessor(sample_rate=SAMPLE_RATE)
 
     if args.record_data is True:
-        print("Flag: Recording Data to PNumber: {}".format(args.pnumber))
+        print("Flag: Recording Data to PLabel: {}".format(args.plabel))
         imu = mpu9250()
         print("IMU Initialized")
         start = time.time()
