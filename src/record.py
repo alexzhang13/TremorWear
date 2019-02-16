@@ -113,7 +113,7 @@ def plot(plots):
     plt.legend(['ax', 'ay', 'az', 'gx', 'gy', 'gz'], loc='upper left')
 
     plt.show()
-    fig.savefig("../imgs/original" + ".png")
+    fig.savefig("../img/original" + ".png")
 
 
 def save(data, name, freq):
