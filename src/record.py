@@ -40,9 +40,9 @@ args = parser.parse_args()
 
 def main():
     processor = preprocess.SignalProcessor(sample_rate=SAMPLE_RATE)
+    print("Flag: Recording Data to PLabel: {}".format(args.plabel))
 
     if args.record_data is True:
-        print("Flag: Recording Data to PLabel: {}".format(args.plabel))
         imu = mpu9250()
         print("IMU Initialized")
         start = time.time()
