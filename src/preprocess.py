@@ -25,20 +25,11 @@ class SignalProcessor():
 
     # Simple Bandpass Filter
     def Bandpass_Filter(self, sequence, low_freq, high_freq, order):
-        # Convert to FFT
-        #fourier, freq = self.Fourier(sequence)
-
-        # Filter
         nyq = 0.5*self.srate # Nyquist Frequency
         low = low_freq / nyq
         high = high_freq / nyq
         b, a = butter(order, [low, high], btype='band')
         filtered_sequence = filtfilt(b, a, sequence)
-
-        #self.SaveFFTGraph(filtered_fourier, freq, "Filtered")
-
-        # Return iFFT of filtered FFT
-        #return self.IFourier(filtered_fourier, len(sequence))
         time_window = np.linspace(0, len(sequence) * (1 / self.srate), len(sequence))
         return filtered_sequence, time_window
 
@@ -77,7 +68,7 @@ class SignalProcessor():
         plt.legend(['real', 'imaginary'], loc='upper left')
         plt.show()
 
-        fig.savefig("../imgs/" + name + ".png")
+        fig.savefig("../img/" + name + ".png")
 
     def SaveFFTGraph(self, fourier, freq, name):
         fig = plt.figure(figsize=(8, 4))
@@ -88,17 +79,17 @@ class SignalProcessor():
         ax.set_xlabel("Frequency [Hz]")
 
         ax.plot(freq, 2.0/len(fourier) * np.abs(fourier[:len(fourier)//2]))
-        plt.xlim(0, 250)
+        plt.xlim(0, 50)
 
         plt.show()
 
-        fig.savefig("../imgs/" + name + ".png")
+        fig.savefig("../img/" + name + ".png")
 
     def SaveButterFilterGraph(self, y, window, name):
         fig = plt.figure(figsize=(8, 4))
         ax = fig.add_subplot(1, 1, 1)
 
-        ax.set_title(" Composed Graph: " + name, fontsize=18)
+        ax.set_title(" Filtered Graph: " + name, fontsize=18)
         ax.set_ylabel("Angular V(t) [rad/s]")
         ax.set_xlabel("Time [s]")
 
@@ -106,17 +97,17 @@ class SignalProcessor():
         ax.plot(window, y)
         plt.show()
 
-        fig.savefig("../imgs/" + name + ".png")
+        fig.savefig("../img/" + name + ".png")
 
     def FilterTest(self, sequence, name):
         filtered, window = self.Bandpass_Filter(sequence, 3, 12, 5)
-        self.SaveButterFilterGraph(filtered, window, "Filtered")
+        self.SaveButterFilterGraph(filtered, window, name + "_Filtered")
 
         fourier, freq = self.Fourier(sequence)
-        self.SaveFFTGraph(fourier, freq, name + "_OriginalFFT")
+        self.SaveFFTGraph(fourier, freq, name + ": Original FFT")
 
         fourier, freq = self.Fourier(filtered)
-        self.SaveFFTGraph(fourier, freq, name + "_FFT")
+        self.SaveFFTGraph(fourier, freq, name + ": Filtered FFT")
 
     def FourierTest(self, sequence, name):
         fourier, freq = self.Fourier(sequence)
@@ -124,3 +115,6 @@ class SignalProcessor():
 
         ifourier, window = self.IFourier(fourier, len(sequence))
         self.SaveIFFTGraph(ifourier, window, name + "_C")
+
+    def WindowFourier(self, sequence, window, name):
+        pass
