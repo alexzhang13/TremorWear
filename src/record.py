@@ -103,7 +103,7 @@ def graph_imu(plot_all, filepath, plot_data, window, window_num, window_size, pr
                 data = plotsg[min(5, window_num) % 3]
             else:
                 data = plotsa[window_num]
-            window_FFT(data, window_size, sdata_dict[window_num])
+            processor.WindowFourier(data, window_size, sdata_dict[window_num])
 
 # Function for Recording IMU Data
 def record(imu, length):
@@ -120,11 +120,6 @@ def record(imu, length):
         gz.append(gzt*DEG_TO_RAD)
 
     return ax, ay, az, gx, gy, gz
-
-
-# Function for Graphing a Shifting FFT Window of Input Data [One Parameter]
-def window_FFT(sensor_data, window_size, name):
-    pass
 
 
 # Given File Name from Data Folder

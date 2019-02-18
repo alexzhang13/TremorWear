@@ -116,5 +116,22 @@ class SignalProcessor():
         ifourier, window = self.IFourier(fourier, len(sequence))
         self.SaveIFFTGraph(ifourier, window, name + "_C")
 
-    def WindowFourier(self, sequence, window, name):
-        pass
+    def WindowFourier(self, sequence, window_size, name):
+        fig = plt.figure(figsize=(8,4))
+        ax = fig.add_subplot(1, 1, 1)
+        ax.set_title(" Shifting Window: " + name, fontsize=18)
+        ax.set_ylabel("Amplitude")
+        ax.set_xlabel("Frequency [Hz]")
+
+        plt.ion()
+        plt.show()
+        ax.set_xlim(0, 50)
+
+        for i in range(len(sequence)-window_size):
+            fourier, freq = self.Fourier(sequence[i:window_size+i])
+            ax.plot(freq, 2.0 / len(fourier) * np.abs(fourier[:len(fourier) // 2]))
+            plt.draw()
+            plt.pause(0.001)
+            plt.clf()
+
+        plt.close()
