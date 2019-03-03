@@ -1,7 +1,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import butter, filtfilt
+import random as rand
 
+colordict = {
+    0: 'b',
+    1: 'g',
+    2: 'r',
+    3: 'c',
+    4: 'm',
+    5: 'y',
+    6: 'k',
+}
 
 # Process 3 sequences of spatial information (gx, gy, gz)
 class SignalProcessor():
@@ -35,7 +45,7 @@ class SignalProcessor():
 
     def Fourier(self, spatial_sequence):
         fourier = np.fft.fft(spatial_sequence)
-        freq = np.linspace(0.0, self.srate, len(spatial_sequence)/2)
+        freq = np.linspace(0.0, 0.5*self.srate, len(spatial_sequence)/2)
         return fourier, freq
 
     def IFourier(self, fourier_sequence, window_size):
@@ -74,7 +84,7 @@ class SignalProcessor():
         fig = plt.figure(figsize=(8, 4))
         ax = fig.add_subplot(1, 1, 1)
 
-        ax.set_title(" Decomposed " + name, fontsize=18)
+        ax.set_title(" FFT Graph: " + name, fontsize=18)
         ax.set_ylabel("Amplitude")
         ax.set_xlabel("Frequency [Hz]")
 
@@ -100,14 +110,20 @@ class SignalProcessor():
         fig.savefig("../img/" + name + ".png")
 
     def FilterTest(self, sequence, name):
-        filtered, window = self.Bandpass_Filter(sequence, 3, 12, 5)
+        filtered, window = self.Bandpass_Filter(sequence, 3, 13, 5)
         self.SaveButterFilterGraph(filtered, window, name + "_Filtered")
 
         fourier, freq = self.Fourier(sequence)
         self.SaveFFTGraph(fourier, freq, name + ": Original FFT")
 
-        fourier, freq = self.Fourier(filtered)
-        self.SaveFFTGraph(fourier, freq, name + ": Filtered FFT")
+        fourier2, freq2 = self.Fourier(filtered)
+        self.SaveFFTGraph(fourier2, freq2, name + ": Filtered FFT")
+
+        voluntary = np.subtract(sequence, filtered)
+        self.SaveButterFilterGraph(voluntary, window, name + "_VoluntaryMotion")
+
+        fourier3, freq3 = self.Fourier(voluntary)
+        self.SaveFFTGraph(fourier3, freq3, name + ": Voluntary FFT")
 
     def FourierTest(self, sequence, name):
         fourier, freq = self.Fourier(sequence)
@@ -118,20 +134,43 @@ class SignalProcessor():
 
     def WindowFourier(self, sequence, window_size, name):
         fig = plt.figure(figsize=(8,4))
-        ax = fig.add_subplot(1, 1, 1)
-        ax.set_title(" Shifting Window: " + name, fontsize=18)
-        ax.set_ylabel("Amplitude")
-        ax.set_xlabel("Frequency [Hz]")
 
         plt.ion()
         plt.show()
-        ax.set_xlim(0, 50)
 
-        for i in range(len(sequence)-window_size):
-            fourier, freq = self.Fourier(sequence[i:window_size+i])
-            ax.plot(freq, 2.0 / len(fourier) * np.abs(fourier[:len(fourier) // 2]))
+        for i in range(0, len(sequence)-window_size, 1):
+            filtered, window = self.Bandpass_Filter(sequence[i:window_size+i], 3, 13, 5)
+            fourier, freq = self.Fourier(filtered)
+            ax = fig.add_subplot(1, 1, 1)
+            ax.set_title(" Shifting Window: " + name, fontsize=18)
+            ax.set_ylabel("Amplitude")
+            ax.set_xlabel("Frequency [Hz]")
+            ax.set_xlim(0, 50)
+            ax.set_ylim(0, 0.02)
+            ax.plot(freq, 2.0 / len(fourier) * np.abs(fourier[:len(fourier)//2]), 'bo-', color=colordict[0])
             plt.draw()
-            plt.pause(0.001)
+            plt.pause(0.1)
             plt.clf()
 
-        plt.close()
+        plt.waitforbuttonpress()
+
+    def SaveSequences(self, gx, gy, gz, filename):
+        xfiltered, window = self.Bandpass_Filter(gx, 3, 13, 5)
+        yfiltered, _ = self.Bandpass_Filter(gy, 3, 13, 5)
+        zfiltered, _ = self.Bandpass_Filter(gz, 3, 13, 5)
+
+        xvoluntary = np.subtract(gx, xfiltered)
+        yvoluntary = np.subtract(gy, yfiltered)
+        zvoluntary = np.subtract(gz, zfiltered)
+
+        file1 = open("../data/" + filename + "_Filtered.txt", 'x')
+        file1.write("500\n")
+        for i in range(len(window)):
+            file1.write("{} {} {} {} {} {} {}\n".format(window[i], 0.0, 0.0, 0.0, xfiltered[i], yfiltered[i], zfiltered[i]))
+        file1.close()
+
+        file2 = open("../data/" + filename + "_Voluntary.txt", 'x')
+        file2.write("500\n")
+        for i in range(len(window)):
+            file2.write("{} {} {} {} {} {} {}\n".format(window[i], 0.0, 0.0, 0.0, xvoluntary[i], yvoluntary[i], zvoluntary[i]))
+        file2.close()
